@@ -98,6 +98,62 @@ This source code has been donated to the **Public Domain**. Do whatever you want
 
 See [http://tulrich.com/geekstuff/gameswf.html](http://tulrich.com/geekstuff/gameswf.html) for more info about the original project.
 
+## Embedding in Other Applications
+
+GameSWF can be embedded in game engines like Godot, custom engines, or any application with an OpenGL context. See `gameswf/gameswf_embed.h` for the simplified C/C++ API.
+
+### Quick Start (C++)
+
+```cpp
+#include "gameswf/gameswf_embed.h"
+
+// Initialize (your OpenGL context must be current)
+gameswf_embed::init();
+
+// Load and use
+gameswf_embed::SWFMovie movie;
+movie.load("animation.swf");
+
+// In your render loop:
+movie.advance(delta_time);           // Update animation
+movie.render(0, 0, width, height);   // Render to GL context
+
+// Handle input
+movie.mouse_move(x, y);
+movie.mouse_button(x, y, 1);         // Left click
+movie.key_down(GAMESWF_KEY_SPACE);
+
+// Cleanup
+movie.unload();
+gameswf_embed::shutdown();
+```
+
+### Quick Start (C)
+
+```c
+#include "gameswf/gameswf_embed.h"
+
+gameswf_init(1);  // 1 = use built-in OpenGL renderer
+
+gameswf_instance swf = gameswf_load("animation.swf");
+
+// In render loop:
+gameswf_advance(swf, delta_time);
+gameswf_render(swf, 0, 0, width, height);
+
+// Input
+gameswf_mouse_move(swf, x, y);
+gameswf_mouse_button(swf, x, y, GAMESWF_MOUSE_LEFT);
+
+// Cleanup
+gameswf_unload(swf);
+gameswf_shutdown();
+```
+
+### Custom Render Handler (Vulkan, etc.)
+
+For Vulkan or other rendering APIs, implement the `gameswf::render_handler` interface and call `gameswf_set_render_handler()` before loading movies. See `gameswf/example_embed.cpp` for a skeleton implementation.
+
 ## Original Author
 
 - Thatcher Ulrich <tu@tulrich.com>

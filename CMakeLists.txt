@@ -185,6 +185,7 @@ set(GAMESWF_SOURCES
     gameswf/gameswf_as_classes/as_transform.cpp
     gameswf/gameswf_as_classes/as_xml.cpp
     gameswf/gameswf_as_classes/as_xmlsocket.cpp
+    gameswf/gameswf_embed.cpp
 )
 
 # Add SDL sound handler if available
@@ -240,6 +241,26 @@ install(TARGETS base gameswf
 
 if(GAMESWF_BUILD_PLAYER)
     install(TARGETS gameswf_test_ogl RUNTIME DESTINATION bin)
+endif()
+
+# Build GLFW example if GLFW is available
+option(GAMESWF_BUILD_GLFW_EXAMPLE "Build GLFW embedding example" ON)
+if(GAMESWF_BUILD_GLFW_EXAMPLE)
+    find_package(glfw3 QUIET)
+    if(glfw3_FOUND)
+        add_executable(example_glfw examples/example_glfw.cpp)
+        target_link_libraries(example_glfw
+            PRIVATE
+                gameswf
+                glfw
+                OpenGL::GL
+                OpenGL::GLU
+        )
+        target_include_directories(example_glfw PRIVATE ${CMAKE_SOURCE_DIR})
+        message(STATUS "  GLFW example: Enabled")
+    else()
+        message(STATUS "  GLFW example: Disabled (GLFW not found)")
+    endif()
 endif()
 
 # Install headers

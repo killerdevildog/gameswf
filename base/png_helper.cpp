@@ -74,7 +74,8 @@ namespace png_helper
 
 	void write_data(png_structp png_ptr, png_bytep data, png_size_t length)
 	{
-		fwrite(data, length, 1, (FILE*) png_ptr->io_ptr);
+		// Modern libpng uses png_get_io_ptr() instead of direct struct access
+		fwrite(data, length, 1, (FILE*) png_get_io_ptr(png_ptr));
 	}
 
 	void	write_rgba(FILE* out, uint8* data, int width, int height, int bpp)

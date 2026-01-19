@@ -147,7 +147,7 @@ namespace gameswf
 	{
 		vm_stack m_scope;	// scope stack for AVM2
 		as_value	m_global_register[GLOBAL_REGISTER_COUNT];
-		array<as_value>	m_local_register;	// function2 uses this
+		::array<as_value>	m_local_register;	// function2 uses this
 		gc_ptr<as_object>	m_target;
 
 		// For local vars.  Use empty names to separate frames.
@@ -159,7 +159,7 @@ namespace gameswf
 			frame_slot() {}
 			frame_slot(const tu_string& name, const as_value& val) : m_name(name), m_value(val) {}
 		};
-		array<frame_slot>	m_local_frames;
+		::array<frame_slot>	m_local_frames;
 
 		weak_ptr<player> m_player;
 
@@ -176,13 +176,13 @@ namespace gameswf
 		void set_target(character* target);
 		void set_target(as_value& target, character* original_target);
 
-		as_value	get_variable(const tu_string& varname, const array<with_stack_entry>& with_stack) const;
+		as_value	get_variable(const tu_string& varname, const ::array<with_stack_entry>& with_stack) const;
 		// no path stuff:
-		as_value	get_variable_raw(const tu_string& varname, const array<with_stack_entry>& with_stack) const;
+		as_value	get_variable_raw(const tu_string& varname, const ::array<with_stack_entry>& with_stack) const;
 
-		void	set_variable(const tu_string& path, const as_value& val, const array<with_stack_entry>& with_stack);
+		void	set_variable(const tu_string& path, const as_value& val, const ::array<with_stack_entry>& with_stack);
 		// no path stuff:
-		void	set_variable_raw(const tu_string& path, const as_value& val, const array<with_stack_entry>& with_stack);
+		void	set_variable_raw(const tu_string& path, const as_value& val, const ::array<with_stack_entry>& with_stack);
 
 		void	set_local(const tu_string& varname, const as_value& val);
 		void	add_local(const tu_string& varname, const as_value& val);	// when you know it doesn't exist.

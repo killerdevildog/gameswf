@@ -346,7 +346,7 @@ namespace gameswf
 	}
 
 
-	as_value	as_environment::get_variable(const tu_string& varname, const array<with_stack_entry>& with_stack) const
+	as_value	as_environment::get_variable(const tu_string& varname, const ::array<with_stack_entry>& with_stack) const
 	// Return the value of the given var, if it's defined.
 	{
 		// Path lookup rigamarole.
@@ -384,7 +384,7 @@ namespace gameswf
 
 	as_value	as_environment::get_variable_raw(
 		const tu_string& varname,
-		const array<with_stack_entry>& with_stack) const
+		const ::array<with_stack_entry>& with_stack) const
 	// varname must be a plain variable name; no path parsing.
 	{
 		as_value	val;
@@ -494,7 +494,7 @@ namespace gameswf
 	void	as_environment::set_variable(
 		const tu_string& varname,
 		const as_value& val,
-		const array<with_stack_entry>& with_stack)
+		const ::array<with_stack_entry>& with_stack)
 	// Given a path to variable, set its value.
 	{
 		IF_VERBOSE_ACTION(log_msg("-------------- %s = %s\n", varname.c_str(), val.to_string()));//xxxxxxxxxx
@@ -521,7 +521,7 @@ namespace gameswf
 	void	as_environment::set_variable_raw(
 		const tu_string& varname,
 		const as_value& val,
-		const array<with_stack_entry>& with_stack)
+		const ::array<with_stack_entry>& with_stack)
 	// No path rigamarole.
 	{
 		// Check the with-stack.

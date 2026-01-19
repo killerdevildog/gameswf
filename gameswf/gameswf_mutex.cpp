@@ -20,25 +20,27 @@ namespace gameswf
 		IF_VERBOSE_ACTION(log_msg("SDL thread is started\n"));
 		m_func = fn;
 		m_arg = data;
-		m_thread = SDL_CreateThread(sdl_thread_start_func, this);
+		m_thread = SDL_CreateThread(sdl_thread_start_func, "gameswf_thread", this);
 		assert(m_thread);
 	}
 
 	tu_thread::~tu_thread()
 	{
-		kill();
+		wait();  // Wait instead of kill - SDL2 doesn't have SDL_KillThread
 	}
 
 	void tu_thread::wait()
 	{
-		SDL_WaitThread(m_thread, NULL);
-		m_thread = NULL;
+		if (m_thread) {
+			SDL_WaitThread(m_thread, NULL);
+			m_thread = NULL;
+		}
 	}
 
 	void tu_thread::kill()
 	{
-		SDL_KillThread(m_thread);
-		m_thread = NULL;
+		// SDL_KillThread was removed in SDL2 - use wait instead
+		wait();
 	}
 
 	void tu_thread::start()

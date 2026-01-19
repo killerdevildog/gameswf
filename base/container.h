@@ -805,7 +805,7 @@ public:
 		assert(m_table);
 		m_table->m_entry_count++;
 
-		unsigned int	hash_value = (unsigned int) compute_hash(key);
+		size_t	hash_value = compute_hash(key);
 		int	index = hash_value & m_table->m_size_mask;
 
 		entry*	natural_entry = &(E(index));
@@ -998,7 +998,7 @@ public:
 			: m_next_in_chain(e.m_next_in_chain), m_hash_value(e.m_hash_value), first(e.first), second(e.second)
 		{
 		}
-		entry(const T& key, const U& value, int next_in_chain, int hash_value)
+		entry(const T& key, const U& value, int next_in_chain, size_t hash_value)
 			: m_next_in_chain(next_in_chain), m_hash_value(hash_value), first(key), second(value)
 		{
 		}
@@ -1212,7 +1212,7 @@ public:
 private:
 	// A value of m_hash_value that marks an entry as a
 	// "tombstone" -- i.e. a placeholder entry.
-	static const size_t TOMBSTONE_HASH = (size_t) -1;
+	static constexpr size_t TOMBSTONE_HASH = static_cast<size_t>(-1);
 	
 	int	find_index(const T& key) const
 	// Find the index of the matching entry.  If no match, then return -1.

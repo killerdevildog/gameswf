@@ -7,8 +7,7 @@
 
 #include "base/tu_memdebug.h"	// must be the first in the include list
 
-#include <SDL.h>
-#include <SDL_thread.h>
+#include "base/sdl2_compat.h"
 #include <SDL_opengl.h>
 
 #include "gameswf/gameswf.h"
@@ -586,11 +585,9 @@ int	main(int argc, char *argv[])
 			if (do_sound)
 			{
 
-#if TU_USE_SDL == 1
+#ifdef GAMESWF_HAVE_SDL_MIXER
 				sound = gameswf::create_sound_handler_sdl();
-#endif
-
-#if TU_USE_OPENAL == 1
+#elif TU_USE_OPENAL == 1
 				sound = gameswf::create_sound_handler_openal();
 #endif
 

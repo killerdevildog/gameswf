@@ -10,7 +10,7 @@
 #include "base/tu_config.h"
 #include "base/demo.h"
 #include "base/ogl.h"
-#include "SDL.h"
+#include "base/sdl2_compat.h"
 
 
 namespace demo
@@ -19,7 +19,7 @@ namespace demo
 	{
 		// Display.
 		// Initialize the SDL subsystems we're using.
-		if (SDL_Init(SDL_INIT_VIDEO /* | SDL_INIT_JOYSTICK | SDL_INIT_CDROM | SDL_INIT_AUDIO*/))
+		if (SDL_Init(SDL_INIT_VIDEO /* | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO*/))
 		{
 			fprintf(stderr, "Unable to init SDL: %s\n", SDL_GetError());
 			exit(1);
@@ -28,10 +28,10 @@ namespace demo
 
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-		// Set the video mode.
-		if (SDL_SetVideoMode(width, height, depth, SDL_OPENGL) == 0)
+		// Set the video mode (SDL2 version)
+		if (SDL_SetVideoMode(width, height, depth, SDL_WINDOW_OPENGL) == 0)
 		{
-			fprintf(stderr, "SDL_SetVideoMode() failed.");
+			fprintf(stderr, "SDL_SetVideoMode() failed: %s\n", SDL_GetError());
 			exit(1);
 		}
 

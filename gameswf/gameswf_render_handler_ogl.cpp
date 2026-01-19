@@ -23,86 +23,76 @@
 #include <string.h>	// for memset()
 
 // Pointers to opengl extension functions.
+#ifndef GL_VERSION_2_0
 typedef char GLchar;
+#endif
 
 #if TU_USE_SDL == 1
 
+// Modern OpenGL headers already define these types, only define if missing
+#ifndef GL_VERSION_1_3
 typedef void (APIENTRY* PFNGLACTIVETEXTUREPROC) (GLenum texture);
+#endif
 PFNGLACTIVETEXTUREPROC _glActiveTexture = 0;
 
+#ifndef GL_ARB_multitexture
 typedef void (APIENTRY* PFNGLACTIVETEXTUREARBPROC) (GLenum texture);
-PFNGLACTIVETEXTUREARBPROC	_glActiveTextureARB = 0;
-
 typedef void (APIENTRY* PFNGLCLIENTACTIVETEXTUREARBPROC) (GLenum texture);
-PFNGLCLIENTACTIVETEXTUREARBPROC	_glClientActiveTextureARB = 0;
-
 typedef void (APIENTRY* PFNGLMULTITEXCOORD2FARBPROC) (GLenum target, GLfloat s, GLfloat t);
-PFNGLMULTITEXCOORD2FARBPROC	_glMultiTexCoord2fARB = 0;
-
 typedef void (APIENTRY* PFNGLMULTITEXCOORD2FVARBPROC) (GLenum target, const GLfloat *v);
+#endif
+PFNGLACTIVETEXTUREARBPROC	_glActiveTextureARB = 0;
+PFNGLCLIENTACTIVETEXTUREARBPROC	_glClientActiveTextureARB = 0;
+PFNGLMULTITEXCOORD2FARBPROC	_glMultiTexCoord2fARB = 0;
 PFNGLMULTITEXCOORD2FVARBPROC	_glMultiTexCoord2fvARB = 0;
 
+#ifndef GL_EXT_framebuffer_object
 typedef void (APIENTRY* PFNGLGENFRAMEBUFFERSEXTPROC) (GLsizei n, GLuint *framebuffers);
-PFNGLGENFRAMEBUFFERSEXTPROC glGenFramebuffersEXT = 0;
-
 typedef void (APIENTRY* PFNGLBINDFRAMEBUFFEREXTPROC) (GLenum target, GLuint framebuffer);
-PFNGLBINDFRAMEBUFFEREXTPROC glBindFramebufferEXT = 0;
-
 typedef void (APIENTRY* PFNGLFRAMEBUFFERTEXTURE2DEXTPROC) (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
-PFNGLFRAMEBUFFERTEXTURE2DEXTPROC glFramebufferTexture2DEXT = 0;
-
 typedef GLenum (APIENTRY* PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC) (GLenum target);
+#endif
+PFNGLGENFRAMEBUFFERSEXTPROC glGenFramebuffersEXT = 0;
+PFNGLBINDFRAMEBUFFEREXTPROC glBindFramebufferEXT = 0;
+PFNGLFRAMEBUFFERTEXTURE2DEXTPROC glFramebufferTexture2DEXT = 0;
 PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC glCheckFramebufferStatusEXT = 0;
 
+// Shader-related types - only define if GL 2.0+ headers not present
+#ifndef GL_VERSION_2_0
 typedef void (APIENTRY* PFNGLDELETEPROGRAMPROC) (GLuint program);
-PFNGLDELETEPROGRAMPROC glDeleteProgram = 0;
-
 typedef void (APIENTRY* PFNGLDELETESHADERPROC) (GLuint shader);
-PFNGLDELETESHADERPROC glDeleteShader = 0;
-
 typedef GLuint (APIENTRY* PFNGLCREATESHADERPROC) (GLenum type);
-PFNGLCREATESHADERPROC glCreateShader = 0;
-
 typedef void (APIENTRY* PFNGLSHADERSOURCEPROC) (GLuint shader, GLsizei count, const GLchar* *string, const GLint *length);
-PFNGLSHADERSOURCEPROC glShaderSource = 0;
-
 typedef void (APIENTRY* PFNGLCOMPILESHADERPROC) (GLuint shader);
-PFNGLCOMPILESHADERPROC glCompileShader = 0;
-
 typedef void (APIENTRY* PFNGLGETSHADERIVPROC) (GLuint shader, GLenum pname, GLint *params);
-PFNGLGETSHADERIVPROC glGetShaderiv = 0;
-
 typedef void (APIENTRY* PFNGLGETSHADERINFOLOGPROC) (GLuint shader, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
-PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog = 0;
-
 typedef GLuint (APIENTRY* PFNGLCREATEPROGRAMPROC) (void);
-PFNGLCREATEPROGRAMPROC glCreateProgram = 0;
-
 typedef void (APIENTRY* PFNGLATTACHSHADERPROC) (GLuint program, GLuint shader);
-PFNGLATTACHSHADERPROC glAttachShader = 0;
-
 typedef void (APIENTRY* PFNGLLINKPROGRAMPROC) (GLuint program);
-PFNGLLINKPROGRAMPROC glLinkProgram = 0;
-
 typedef void (APIENTRY* PFNGLGETPROGRAMIVPROC) (GLuint program, GLenum pname, GLint *params);
-PFNGLGETPROGRAMIVPROC glGetProgramiv = 0;
-
 typedef void (APIENTRY* PFNGLGETPROGRAMINFOLOGPROC) (GLuint program, GLsizei bufSize, GLsizei *length, GLchar *infoLog);
-PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog = 0;
-
 typedef void (APIENTRY* PFNGLVALIDATEPROGRAMPROC) (GLuint program);
-PFNGLVALIDATEPROGRAMPROC glValidateProgram = 0;
-
 typedef GLint (APIENTRY* PFNGLGETUNIFORMLOCATIONPROC) (GLuint program, const GLchar *name);
-PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation = 0;
-
 typedef void (APIENTRY* PFNGLUNIFORM1FPROC) (GLint location, GLfloat v0);
-PFNGLUNIFORM1FPROC glUniform1f = 0;
-
 typedef void (APIENTRY* PFNGLUNIFORM1IPROC) (GLint location, GLint v0);
-PFNGLUNIFORM1IPROC glUniform1i = 0;
-
 typedef void (APIENTRY* PFNGLUSEPROGRAMPROC) (GLuint program);
+#endif
+PFNGLDELETEPROGRAMPROC glDeleteProgram = 0;
+PFNGLDELETESHADERPROC glDeleteShader = 0;
+PFNGLCREATESHADERPROC glCreateShader = 0;
+PFNGLSHADERSOURCEPROC glShaderSource = 0;
+PFNGLCOMPILESHADERPROC glCompileShader = 0;
+PFNGLGETSHADERIVPROC glGetShaderiv = 0;
+PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog = 0;
+PFNGLCREATEPROGRAMPROC glCreateProgram = 0;
+PFNGLATTACHSHADERPROC glAttachShader = 0;
+PFNGLLINKPROGRAMPROC glLinkProgram = 0;
+PFNGLGETPROGRAMIVPROC glGetProgramiv = 0;
+PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog = 0;
+PFNGLVALIDATEPROGRAMPROC glValidateProgram = 0;
+PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation = 0;
+PFNGLUNIFORM1FPROC glUniform1f = 0;
+PFNGLUNIFORM1IPROC glUniform1i = 0;
 PFNGLUSEPROGRAMPROC glUseProgram = 0;
 #endif  // TU_USE_SDL
 

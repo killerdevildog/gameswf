@@ -3,8 +3,7 @@
 // This source code has been donated to the Public Domain.  Do
 // whatever you want with it.
 
-// Minimal typedefs.  Follows SDL conventions; falls back on SDL.h if
-// platform isn't obvious.
+// Minimal typedefs.  Modernized to use C++11 standard types.
 
 
 #ifndef TU_TYPES_H
@@ -13,54 +12,26 @@
 
 #include "base/tu_config.h"
 #include <stdio.h>
+#include <cstdint>
 
 
-#if defined(__i386__) || defined(_WIN32) || defined(__GNUC__)
-
+#if defined(__i386__) || defined(_WIN32) || defined(__GNUC__) || defined(__x86_64__)
 	// On known little-endian platforms, define this stuff.
 	#define _TU_LITTLE_ENDIAN_	1
-	
-	#ifdef TU_USE_SDL
-	#	ifndef _SDL_stdinc_h
-		typedef unsigned char	Uint8;
-		typedef signed char	Sint8;
-		typedef unsigned short	Uint16;
-		typedef short	Sint16;
-		typedef unsigned int	Uint32;
-		typedef int	Sint32;
-	#	endif
-	#else
-	#	ifndef Uint8
-		typedef unsigned char	Uint8;
-		typedef signed char	Sint8;
-		typedef unsigned short	Uint16;
-		typedef short	Sint16;
-		typedef unsigned int	Uint32;
-		typedef int	Sint32;
-	#	endif
-	#endif
+#else
+	#undef _TU_LITTLE_ENDIAN_
+#endif
 
-	#ifndef _MSC_VER
-		// Probably gcc or something compatible
-		typedef unsigned long long	Uint64;
-		typedef long long Sint64;
-	#else	// _MSC_VER
-		typedef unsigned __int64	Uint64;
-		typedef __int64	Sint64;
-	#endif	// _MSC_VER
-
-#else	// not __I386__ and not _WIN32
-
-	// On unknown platforms, rely on SDL
-	#include <SDL.h>
-	
-	#if SDL_BYTEORDER == SDL_LIL_ENDIAN
-		#define _TU_LITTLE_ENDIAN_ 1
-	#else
-		#undef _TU_LITTLE_ENDIAN_
-	#endif // SDL_BYTEORDER == SDL_LIL_ENDIAN
-
-#endif	// not __I366__ and not _WIN32
+// Use standard C++ fixed-width integer types
+// These are compatible with SDL2's types (both use <cstdint>)
+typedef uint8_t  Uint8;
+typedef int8_t   Sint8;
+typedef uint16_t Uint16;
+typedef int16_t  Sint16;
+typedef uint32_t Uint32;
+typedef int32_t  Sint32;
+typedef uint64_t Uint64;
+typedef int64_t  Sint64;
 
 
 typedef Uint8 uint8;

@@ -993,7 +993,8 @@ struct render_handler_ogl : public gameswf::render_handler
 
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
-		glOrtho(x0, x1, y0, y1, -1, 1);
+		// Note: Swap y0 and y1 to flip Y axis - Flash has Y=0 at top, OpenGL at bottom
+		glOrtho(x0, x1, y1, y0, -1, 1);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

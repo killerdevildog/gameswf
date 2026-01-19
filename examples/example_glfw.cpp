@@ -245,23 +245,12 @@ int main(int argc, char* argv[]) {
     g_scale_y = (float)g_window_height / g_root->get_movie_height();
     printf("  Scale: %.2fx%.2f\n", g_scale_x, g_scale_y);
     
-    // Set up OpenGL state (matching what SDL player does)
+    // Set up OpenGL state
     glViewport(0, 0, g_window_width, g_window_height);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    // Set up initial projection with Y-flip (Flash has Y=0 at top)
-    // This matches SDL player's: glOrtho(-OVERSIZE, OVERSIZE, OVERSIZE, -OVERSIZE, -1, 1)
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    float oversize = 1.0f;
-    glOrtho(-oversize, oversize, oversize, -oversize, -1, 1);  // Y flipped!
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING);
-    glPushAttrib(GL_ALL_ATTRIB_BITS);
     
     // Main loop
     double last_time = glfwGetTime();

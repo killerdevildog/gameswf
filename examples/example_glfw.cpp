@@ -32,6 +32,7 @@ static gameswf::gc_ptr<gameswf::root> g_root;
 static gameswf::render_handler* g_render_handler = nullptr;
 static int g_mouse_x = 0, g_mouse_y = 0, g_mouse_buttons = 0;
 static int g_window_width = 800, g_window_height = 600;
+static float g_scale_x = 1.0f, g_scale_y = 1.0f;
 
 // Convert GLFW key to GameSWF key code
 static gameswf::key::code glfw_key_to_gameswf(int key) {
@@ -112,8 +113,9 @@ static gameswf::key::code glfw_key_to_gameswf(int key) {
 
 // GLFW callbacks
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
-    g_mouse_x = (int)xpos;
-    g_mouse_y = (int)ypos;
+    // Scale window coordinates to SWF movie coordinates
+    g_mouse_x = (int)(xpos / g_scale_x);
+    g_mouse_y = (int)(ypos / g_scale_y);
     if (g_root) {
         g_root->notify_mouse_state(g_mouse_x, g_mouse_y, g_mouse_buttons);
     }
@@ -155,6 +157,12 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     g_window_width = width;
     g_window_height = height;
     glViewport(0, 0, width, height);
+    
+    // Update scale factors for mouse coordinate conversion
+    if (g_root) {
+        g_scale_x = (float)width / g_root->get_movie_width();
+        g_scale_y = (float)height / g_root->get_movie_height();
+    }
 }
 
 int main(int argc, char* argv[]) {
@@ -232,9 +240,28 @@ int main(int argc, char* argv[]) {
     printf("  ESC - Quit\n");
     printf("  Mouse - Interact with SWF\n");
     
-    // Set up OpenGL state
+    // Calculate scale factors for mouse coordinate conversion
+    g_scale_x = (float)g_window_width / g_root->get_movie_width();
+    g_scale_y = (float)g_window_height / g_root->get_movie_height();
+    printf("  Scale: %.2fx%.2f\n", g_scale_x, g_scale_y);
+    
+    // Set up OpenGL state (matching what SDL player does)
+    glViewport(0, 0, g_window_width, g_window_height);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    // Set up initial projection with Y-flip (Flash has Y=0 at top)
+    // This matches SDL player's: glOrtho(-OVERSIZE, OVERSIZE, OVERSIZE, -OVERSIZE, -1, 1)
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    float oversize = 1.0f;
+    glOrtho(-oversize, oversize, oversize, -oversize, -1, 1);  // Y flipped!
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_LIGHTING);
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
     
     // Main loop
     double last_time = glfwGetTime();
